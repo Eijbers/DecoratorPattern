@@ -20,10 +20,10 @@ namespace DecoratorPattern.DataSource.Extensions
             return Encoding.Unicode.GetBytes(asString);
         }
 
-        public static T Deserialize<T>(this byte[] source)
+        public static string Deserialize<T>(this byte[] source)
         {
             var asString = Encoding.Unicode.GetString(source);
-            return JsonConvert.DeserializeObject<T>(asString);
+            return asString;
         }
     }
 }

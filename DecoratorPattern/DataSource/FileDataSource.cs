@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DecoratorPattern.DataSource.Extensions;
 using DecoratorPattern.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DecoratorPattern.FileReader
 {
@@ -17,29 +18,27 @@ namespace DecoratorPattern.FileReader
         {
             this.FileName = FileName;
         }
-        public List<string> ReadData()
+        public byte[] ReadData()
         {
-            List<string> list = new List<string>();
+            byte[] data;
 
             var sr = new StreamReader(this.FileName);
             var line = sr.ReadLine();
             while (line != null)
-            {
-                list.Add(line);
-                line = sr.ReadLine();
+            {              
+                line += sr.ReadLine();
             }
-            return list;
+            return ExtendedSerializerExtensions.Serialize<string>(line); ;
         }
 
-        public void WriteData(List<string> data)
+        public void WriteData(byte[] data)
         {
-            //Open the File and append in ascii format
-            StreamWriter sw = new StreamWriter(this.FileName, true, Encoding.ASCII);
-           
-            for (int x = 0; x < data.Count; x++)
-            {
-                sw.Write(data[x]);
-            }
+            //Open the File and append
+            StreamWriter sw = new StreamWriter(this.FileName, true);
+
+            var stringData = ExtendedSerializerExtensions.Deserialize<string>(data);
+            sw.Write(stringData);
+            
 
             //close the file
             sw.Close();

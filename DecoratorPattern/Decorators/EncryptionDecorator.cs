@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DecoratorPattern.DataSource.Extensions;
 using DecoratorPattern.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DecoratorPattern.Decorators
 {
@@ -14,14 +15,15 @@ namespace DecoratorPattern.Decorators
         public EncryptionDecorator(IDataSource wrappee) : base(wrappee)
         {
         }
-        public List<string> ReadData()
+        public override byte[] ReadData()
         {
             string key = "thisisakeytousefortestencryption";
-            List<string> returnList = new List<string>();
 
-            List<string> data = this.wrappee.ReadData();
+            byte[] data = this.wrappee.ReadData();
             byte[] iv = new byte[16];
-            byte[] buffer = ExtendedSerializerExtensions.Serialize<List<string>>(data);
+            byte[] buffer = data;
+
+            string returnString = "";
 
             using (Aes aes = Aes.Create())
             {
@@ -37,16 +39,16 @@ namespace DecoratorPattern.Decorators
                         {
                             while(!streamReader.EndOfStream) 
                             {
-                                returnList.Add(streamReader.ReadLine());
+                                returnString += streamReader.ReadLine();
                             }                            
                         }
                     }
                 }
             }
-            return returnList;
+            return ExtendedSerializerExtensions.Serialize(returnString);
         }
 
-        public void WriteData(List<string> data)
+        public override void WriteData(byte[] data)
         {
             string key = "thisisakeytousefortestencryption";
 
@@ -66,13 +68,14 @@ namespace DecoratorPattern.Decorators
                     {
                         using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
                         {
-                            foreach (string s in data) { streamWriter.Write(s); }                            
+                           streamWriter.Write(ExtendedSerializerExtensions.Deserialize<string>(data));                        
                         }
 
                         array = memoryStream.ToArray();
                     }
                 }
             }
+            this.wrappee.WriteData(array);
         }
     }
 }

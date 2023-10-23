@@ -7,7 +7,7 @@ using DecoratorPattern.Interfaces;
 
 namespace DecoratorPattern.Decorators
 {
-    internal class DataSourceDecorator : IDataSource
+     abstract public class DataSourceDecorator : IDataSource
     {
         public IDataSource wrappee { get; set; }
 
@@ -15,14 +15,8 @@ namespace DecoratorPattern.Decorators
         {
             this.wrappee = wrappee;
         }
-        public List<string> ReadData()
-        {
-            return wrappee.ReadData();
-        }
+        abstract public byte[] ReadData();
 
-        public void WriteData(List<string> data)
-        {
-            wrappee.WriteData(data);
-        }
+        abstract public void WriteData(byte[] data);
     }
 }

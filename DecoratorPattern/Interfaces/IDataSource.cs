@@ -8,7 +8,7 @@ namespace DecoratorPattern.Interfaces
 {
     public interface IDataSource
     {
-        public void WriteData(List<string> data);
-        public List<string> ReadData();
+        public void WriteData(byte[] data);
+        public byte[] ReadData();
     }
 }

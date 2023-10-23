@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DecoratorPattern.DataSource.Extensions;
 using DecoratorPattern.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DecoratorPattern.Decorators
 {
@@ -14,10 +15,9 @@ namespace DecoratorPattern.Decorators
         public CompressionDecorator(IDataSource wrappee) : base(wrappee)
         {
         }
-        public new List<string> ReadData()
+        public override byte[] ReadData()
         {
             byte[] bytes = ExtendedSerializerExtensions.Serialize(wrappee.ReadData());
-            List<string> returnList = new List<string>();
 
             using (var memoryStream = new MemoryStream(bytes))
             {
@@ -26,14 +26,13 @@ namespace DecoratorPattern.Decorators
                     using (var decompressStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                     {
                         decompressStream.CopyTo(outputStream);
-                    }                  
-                    returnList.Add(ExtendedSerializerExtensions.Deserialize<string>(outputStream.ToArray()));
-                    return returnList;
+                    }       
+                    return outputStream.ToArray();
                 }
             }
         }
 
-        public new void WriteData(List<string> data)
+        public override void WriteData(byte[] data)
         {
             byte[] byteData = ExtendedSerializerExtensions.Serialize(data);
 
@@ -41,9 +40,10 @@ namespace DecoratorPattern.Decorators
             {
                 using (var gzipStream = new GZipStream(memoryStream, CompressionLevel.Optimal))
                 {
-                    gzipStream.Write(byteData, 0, byteData.Length);
+                    gzipStream.Write(byteData, 0, byteData.Length);                   
                 }
-            }
+                this.wrappee.WriteData(memoryStream.ToArray());
+            }            
         }
     }
 }
