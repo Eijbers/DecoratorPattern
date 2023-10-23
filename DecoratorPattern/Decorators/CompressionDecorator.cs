@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,7 @@ namespace DecoratorPattern.Decorators
         public override void WriteData(byte[] data)
         {
             byte[] byteData = ExtendedSerializerExtensions.Serialize(data);
+            byte[] array;
 
             using (var memoryStream = new MemoryStream())
             {
@@ -42,8 +44,9 @@ namespace DecoratorPattern.Decorators
                 {
                     gzipStream.Write(byteData, 0, byteData.Length);                   
                 }
-                this.wrappee.WriteData(memoryStream.ToArray());
-            }            
+                array = memoryStream.ToArray();              
+            }
+            this.wrappee.WriteData(array);
         }
     }
 }

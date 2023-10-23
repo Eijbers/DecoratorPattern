@@ -11,7 +11,7 @@ namespace DecoratorPattern
         {
             IDataSource source;
 
-            source =  new FileDataSource("C:\\Users\\AEijbers\\OneDrive - ilionx Group BV\\Documenten\\TestData\\DecoratorFileSource\\test3.txt");           
+            source =  new FileDataSource("C:\\Users\\AEijbers\\OneDrive - ilionx Group BV\\Documenten\\TestData\\DecoratorFileSource\\testPattern.txt");           
             source.WriteData(ExtendedSerializerExtensions.Serialize("this is test data"));
 
             source = new EncryptionDecorator(source);
