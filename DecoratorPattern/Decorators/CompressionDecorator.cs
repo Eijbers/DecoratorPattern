@@ -14,7 +14,7 @@ namespace DecoratorPattern.Decorators
         public CompressionDecorator(IDataSource wrappee) : base(wrappee)
         {
         }
-        public List<string> ReadData()
+        public new List<string> ReadData()
         {
             byte[] bytes = ExtendedSerializerExtensions.Serialize(wrappee.ReadData());
             List<string> returnList = new List<string>();
@@ -26,19 +26,14 @@ namespace DecoratorPattern.Decorators
                     using (var decompressStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                     {
                         decompressStream.CopyTo(outputStream);
-                    }
-                    foreach (var item in outputStream.ToArray())
-                    {
-                        //TO DO: Fix this. This is a weird conversion that will not result in a usable output.
-                        returnList.Add(ExtendedSerializerExtensions.Deserialize<string>(outputStream.ToArray()));
-
-                    }
+                    }                  
+                    returnList.Add(ExtendedSerializerExtensions.Deserialize<string>(outputStream.ToArray()));
                     return returnList;
                 }
             }
         }
 
-        public void WriteData(List<string> data)
+        public new void WriteData(List<string> data)
         {
             byte[] byteData = ExtendedSerializerExtensions.Serialize(data);
 

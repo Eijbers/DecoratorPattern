@@ -16,7 +16,7 @@ namespace DecoratorPattern.Decorators
         }
         public List<string> ReadData()
         {
-            string key = "thisisakey";
+            string key = "thisisakeytousefortestencryption";
             List<string> returnList = new List<string>();
 
             List<string> data = this.wrappee.ReadData();
@@ -48,7 +48,7 @@ namespace DecoratorPattern.Decorators
 
         public void WriteData(List<string> data)
         {
-            string key = "thisisakey";
+            string key = "thisisakeytousefortestencryption";
 
             byte[] iv = new byte[16];
             byte[] array;

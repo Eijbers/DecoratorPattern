@@ -35,8 +35,7 @@ namespace DecoratorPattern.FileReader
         {
             //Open the File and append in ascii format
             StreamWriter sw = new StreamWriter(this.FileName, true, Encoding.ASCII);
-
-            //Write out the numbers 1 to 10 on the same line.
+           
             for (int x = 0; x < data.Count; x++)
             {
                 sw.Write(data[x]);
